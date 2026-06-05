@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductoRequest;
 use App\Http\Requests\UpdateProductoRequest;
 use App\Models\Producto;
+use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
 class ProductoController extends Controller
@@ -19,9 +20,10 @@ class ProductoController extends Controller
             new OA\Response(response: 200, description: 'Lista paginada de productos'),
         ]
     )]
-    public function index()
+    public function index(Request $request)
     {
-        $productos = Producto::orderBy('nombre')->paginate(15);
+        $perPage = $request->get('per_page', 5);
+        $productos = Producto::orderBy('nombre')->paginate($perPage);
         return response()->json($productos);
     }
 

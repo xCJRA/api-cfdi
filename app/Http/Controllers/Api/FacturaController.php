@@ -8,6 +8,7 @@ use App\Http\Requests\StoreFacturaRequest;
 use App\Models\Factura;
 use App\Models\Producto;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
 class FacturaController extends Controller
@@ -23,11 +24,12 @@ class FacturaController extends Controller
             new OA\Response(response: 200, description: 'Lista paginada de facturas con cliente'),
         ]
     )]
-    public function index()
+    public function index(Request $request)
     {
+        $perPage = $request->get('per_page', 5);
         $facturas = Factura::with('cliente')
             ->orderBy('created_at', 'desc')
-            ->paginate(15);
+            ->paginate($perPage);
 
         return response()->json($facturas);
     }

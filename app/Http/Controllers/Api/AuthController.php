@@ -48,6 +48,41 @@ class AuthController extends Controller
 
         $token = $user->createToken('api-token')->plainTextToken;
 
-        return response()->json(['token' => $token]);
+        return response()->json(
+            [
+                'token' => $token,
+                'user'  => [
+                    'name'=>$user->name,
+                    'email'=>$user->email
+                ]
+
+            ]
+        );
+    }
+
+    #[OA\Post(
+        path: '/logout',
+        tags: ['Autenticación'],
+        summary: 'Cerrar sesión',
+        description: 'Revoca el token actual del usuario autenticado.',
+        security: [['sanctum' => []]],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Sesión cerrada correctamente',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'message', type: 'string', example: 'Sesión cerrada correctamente.'),
+                    ]
+                )
+            ),
+            new OA\Response(response: 401, description: 'No autenticado'),
+        ]
+    )]
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json(['message' => 'Sesión cerrada correctamente.']);
     }
 }

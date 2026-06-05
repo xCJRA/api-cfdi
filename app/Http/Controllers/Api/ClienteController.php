@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreClienteRequest;
 use App\Http\Requests\UpdateClienteRequest;
 use App\Models\Cliente;
+use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
 class ClienteController extends Controller
@@ -19,9 +20,10 @@ class ClienteController extends Controller
             new OA\Response(response: 200, description: 'Lista paginada de clientes'),
         ]
     )]
-    public function index()
+    public function index(Request $request)
     {
-        $clientes = Cliente::orderBy('nombre')->paginate(15);
+        $perPage = $request->get('per_page', 5);
+        $clientes = Cliente::orderBy('nombre')->paginate($perPage);
         return response()->json($clientes);
     }
 

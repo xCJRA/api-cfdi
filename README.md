@@ -8,7 +8,7 @@ API REST que simula el flujo completo de facturación electrónica mexicana (CFD
 - **MySQL** — base de datos relacional
 - **Laravel Sanctum** — autenticación por tokens
 - **L5-Swagger / OpenAPI 3.0** — documentación interactiva
-- **PHPUnit** — pruebas automatizadas
+- **PHPUnit** — pruebas automatizadas (15 tests)
 
 ## ✨ Funcionalidades
 
@@ -26,6 +26,7 @@ API REST que simula el flujo completo de facturación electrónica mexicana (CFD
 ## 📋 Instalación
 
 ### Requisitos previos
+
 - PHP 8.2+
 - Composer
 - MySQL
@@ -79,11 +80,17 @@ Content-Type: application/json
 ```
 
 Usa el token recibido en el header de todas las peticiones:
+
+```http
+Authorization: Bearer {token}
+```
+
 ## 📌 Endpoints principales
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
 | POST | `/api/login` | Obtener token de acceso |
+| POST | `/api/logout` | Cerrar sesión |
 | GET | `/api/clientes` | Listar clientes |
 | POST | `/api/clientes` | Crear cliente |
 | GET | `/api/clientes/{id}` | Ver cliente |
@@ -116,6 +123,7 @@ Content-Type: application/json
 ```
 
 Respuesta:
+
 ```json
 {
     "id": 1,
@@ -128,6 +136,43 @@ Respuesta:
     "fecha_emision": "2026-05-21T10:00:00"
 }
 ```
+
+## 🧪 Tests
+
+El proyecto incluye tests automatizados con PHPUnit cubriendo los flujos principales de la API.
+
+### Configurar ambiente de testing
+
+```bash
+cp .env.testing.example .env.testing
+php artisan key:generate --env=testing
+```
+
+> Los tests usan SQLite en memoria — no necesitas configurar una base de datos separada.
+
+### Ejecutar todos los tests
+
+```bash
+php artisan test
+```
+
+### Ejecutar un módulo específico
+
+```bash
+php artisan test --filter AuthTest
+php artisan test --filter ClienteTest
+php artisan test --filter ProductoTest
+php artisan test --filter FacturaTest
+```
+
+### Cobertura de tests
+
+| Módulo | Tests | Qué se verifica |
+|--------|-------|-----------------|
+| **Auth** | 2 | Login correcto, credenciales incorrectas |
+| **Clientes** | 4 | Listar, crear, RFC inválido, acceso sin token |
+| **Productos** | 3 | Listar, crear, validación de campos |
+| **Facturas** | 5 | Listar, crear, cálculo de IVA, cancelar, validaciones |
 
 ## 🗄️ Estructura de la base de datos
 
@@ -142,5 +187,5 @@ Respuesta:
 
 ## 👨‍💻 Autor
 
-**César Reyes** — Backend Developer  
+**César José Reyes Alonso** — Backend Developer  
 [LinkedIn](https://linkedin.com/in/xcjra) · [GitHub](https://github.com/xCJRA)

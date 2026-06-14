@@ -26,7 +26,7 @@ class FacturaController extends Controller
     )]
     public function index(Request $request)
     {
-        $perPage = $request->get('per_page', 5);
+        $perPage = $request->get('perPage', 5);
         $facturas = Factura::with('cliente')
             ->orderBy('created_at', 'desc')
             ->paginate($perPage);

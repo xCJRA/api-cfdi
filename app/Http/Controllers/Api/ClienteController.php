@@ -22,7 +22,7 @@ class ClienteController extends Controller
     )]
     public function index(Request $request)
     {
-        $perPage = $request->get('per_page', 5);
+        $perPage = $request->get('perPage', 5);
         $clientes = Cliente::orderBy('nombre')->paginate($perPage);
         return response()->json($clientes);
     }

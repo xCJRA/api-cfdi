@@ -22,7 +22,7 @@ class ProductoController extends Controller
     )]
     public function index(Request $request)
     {
-        $perPage = $request->get('per_page', 5);
+        $perPage = $request->get('perPage', 5);
         $productos = Producto::orderBy('nombre')->paginate($perPage);
         return response()->json($productos);
     }
